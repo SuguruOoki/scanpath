@@ -7,7 +7,7 @@ import { mkdtempSync } from 'node:fs';
 import { secureDir } from '../dist/util.js';
 
 test('secureDir: 出力先自体がシンボリックリンクなら拒否する', (t) => {
-  const root = mkdtempSync(join(tmpdir(), 'rr-secure-'));
+  const root = mkdtempSync(join(tmpdir(), 'sp-secure-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   mkdirSync(join(root, 'real'));
   symlinkSync(join(root, 'real'), join(root, 'link'));
@@ -15,7 +15,7 @@ test('secureDir: 出力先自体がシンボリックリンクなら拒否する
 });
 
 test('secureDir: 祖先のシンボリックリンクは許可する（macOS の /var 相当）', (t) => {
-  const root = mkdtempSync(join(tmpdir(), 'rr-secure-'));
+  const root = mkdtempSync(join(tmpdir(), 'sp-secure-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   mkdirSync(join(root, 'real'));
   symlinkSync(join(root, 'real'), join(root, 'link'));
@@ -24,7 +24,7 @@ test('secureDir: 祖先のシンボリックリンクは許可する（macOS の
 });
 
 test('secureDir: 通常のパスはそのまま作成できる', (t) => {
-  const root = mkdtempSync(join(tmpdir(), 'rr-secure-'));
+  const root = mkdtempSync(join(tmpdir(), 'sp-secure-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   secureDir(join(root, 'a', 'b'));
   assert.ok(existsSync(join(root, 'a', 'b')));

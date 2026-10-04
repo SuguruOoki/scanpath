@@ -1,8 +1,10 @@
-# Review Radar — 人間が読むべき変更を、根拠とともに
+# scanpath — 人間が読むべき変更を、根拠とともに
 
 Gitの変更差分を、**人間の確認が必須・人間レビューを優先・判断材料を追加・通常レビュー候補**に整理するCLIです。字句ルールによるヒューリスティック判定が既定で、Jev / TypeSafeによる意味的な評価は opt-in です。
 
-[![CI](https://github.com/SuguruOoki/review-radar/actions/workflows/test.yml/badge.svg)](https://github.com/SuguruOoki/review-radar/actions/workflows/test.yml)
+*旧名 Review Radar（v0.3.0 で scanpath に改称）。*
+
+[![CI](https://github.com/SuguruOoki/scanpath/actions/workflows/test.yml/badge.svg)](https://github.com/SuguruOoki/scanpath/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node >= 22](https://img.shields.io/badge/Node-%3E%3D22-green.svg)](package.json)
 
@@ -11,8 +13,8 @@ Gitの変更差分を、**人間の確認が必須・人間レビューを優先
 **English guide: [README.md](README.md)** — 更新時の正は英語版です。
 
 ```console
-$ git clone https://github.com/SuguruOoki/review-radar.git
-$ cd review-radar && node dist/cli.js doctor     # Node.js 22+ と Git のみ。npm install 不要・通信なし
+$ git clone https://github.com/SuguruOoki/scanpath.git
+$ cd scanpath && node dist/cli.js doctor     # Node.js 22+ と Git のみ。npm install 不要・通信なし
 $ node dist/cli.js demo --out demo-output && open demo-output/report.html
 ```
 
@@ -34,7 +36,7 @@ $ node dist/cli.js demo --out demo-output && open demo-output/report.html
 
 ## これは何か
 
-Review Radar は Git の差分を hunk（差分のまとまり）単位に分割し、4つのルートに振り分けます:
+scanpath は Git の差分を hunk（差分のまとまり）単位に分割し、4つのルートに振り分けます:
 
 | ルートID | レポートの表示 | 意味 |
 | --- | --- | --- |
@@ -47,7 +49,7 @@ Review Radar は Git の差分を hunk（差分のまとまり）単位に分割
 
 しないこと: 自動承認・マージ・コード修正・push・変更コードの実行・テスト実行・GitHub等への投稿・テレメトリ送信。既定のヒューリスティック判定は完全ローカルで通信しません。Jev / TypeSafe の意味評価は、APIキーと明示的な `--allow-external-data` の**両方**があって初めて動きます。
 
-現在のリリース: **v0.2.1**。指数はレビュー優先度であり欠陥確率ではありません。重みと閾値は未較正です。使う前に[限界](#限界)を読んでください。
+現在のリリース: **v0.3.0**。指数はレビュー優先度であり欠陥確率ではありません。重みと閾値は未較正です。使う前に[限界](#限界)を読んでください。
 
 ## 特徴
 
@@ -80,8 +82,8 @@ Review Radar は Git の差分を hunk（差分のまとまり）単位に分割
 必要なのは **Node.js 22以上とGit**。リポジトリにはビルド済みの `dist/` が同梱されており、利用だけなら `npm install` は不要です。ランタイム依存もありません。
 
 ```bash
-git clone https://github.com/SuguruOoki/review-radar.git
-cd review-radar
+git clone https://github.com/SuguruOoki/scanpath.git
+cd scanpath
 node dist/cli.js doctor
 ```
 
@@ -91,7 +93,7 @@ node dist/cli.js doctor
 ```console
 $ node dist/cli.js doctor
 {
-  "tool": "review-radar 0.2.1",
+  "tool": "scanpath 0.3.0",
   "node": "v24.18.1",
   "git": "git version 2.50.1 (Apple Git-155)",
   "typesafeApiKey": "not configured",
@@ -163,7 +165,7 @@ Jevモードはコード抜粋を外部APIへ送信します。業務コード�
      --provider jev --allow-external-data --max-requests 10 --out ./review-output
    ```
 
-キーがあるだけでは送信されません。`.env` の自動読込はしません。突合に使った公開仕様は https://docs.typesafe.ai/api です。ローカルモデル用に、ループバックのJev互換エンドポイント（`REVIEW_RADAR_JEV_ENDPOINT`、`http://127.0.0.1` 等のみ）も使えます。**Jev実APIとの接続テストは未実施です**（[限界](#限界)参照）。
+キーがあるだけでは送信されません。`.env` の自動読込はしません。突合に使った公開仕様は https://docs.typesafe.ai/api です。ローカルモデル用に、ループバックのJev互換エンドポイント（`SCANPATH_JEV_ENDPOINT`、`http://127.0.0.1` 等のみ）も使えます。**Jev実APIとの接続テストは未実施です**（[限界](#限界)参照）。
 
 ### 仕様・CI結果を添える
 
@@ -183,7 +185,7 @@ node dist/cli.js evaluate --report review-output/report.json --feedback feedback
 node dist/cli.js rerank --report review-output/report.json --config tuned-config.json --out reranked
 ```
 
-outcome は `critical_fix` / `bug_fix` / `spec_decision` / `design_decision` / `cosmetic` / `no_action` / `insufficient_context`。`--out` を省略した場合の既定は `.review-radar/feedback.jsonl` です。`rerank` は保存済みのモデル判定を再利用するため、ルール・閾値・スコープ・モデルを変えたら新しいスキャンが必要です。
+outcome は `critical_fix` / `bug_fix` / `spec_decision` / `design_decision` / `cosmetic` / `no_action` / `insufficient_context`。`--out` を省略した場合の既定は `.scanpath/feedback.jsonl` です。`rerank` は保存済みのモデル判定を再利用するため、ルール・閾値・スコープ・モデルを変えたら新しいスキャンが必要です。
 
 ### コマンド一覧
 
@@ -192,7 +194,7 @@ outcome は `critical_fix` / `bug_fix` / `spec_decision` / `design_decision` / `
 | `scan` | 差分を解析し `report.html` / `report.md` / `report.json` を出力 |
 | `demo` | 人工リポジトリを通信なしで解析 |
 | `doctor` | ツール・Node・Gitのバージョン表示 |
-| `init` | 既定の `review-radar.config.json` を生成 |
+| `init` | 既定の `scanpath.config.json` を生成 |
 | `feedback` | ユニットへのレビュー結果を記録 |
 | `evaluate` | ラベル付与率・精度・監査状況の集計 |
 | `rerank` | 重みだけを変えて保存済みレポートを再順位付け |
@@ -237,10 +239,10 @@ HTMLレポートは検索・確認ルートの絞り込み・根拠コードの�
 ## 設定
 
 ```bash
-node dist/cli.js init --out ./review-radar.config.json
+node dist/cli.js init --out ./scanpath.config.json
 ```
 
-設定ファイルでは、軸の重み・ルート閾値・サイズ上限・Jevのリクエスト設定・除外グロブ・追加の必須パス規則を変更できます。注釈付きの既定値は [examples/review-radar.config.json](examples/review-radar.config.json) を参照してください。
+設定ファイルでは、軸の重み・ルート閾値・サイズ上限・Jevのリクエスト設定・除外グロブ・追加の必須パス規則を変更できます。注釈付きの既定値は [examples/scanpath.config.json](examples/scanpath.config.json) を参照してください。
 
 ## 限界
 
@@ -257,7 +259,7 @@ node dist/cli.js init --out ./review-radar.config.json
 
 **`--staged` と `--head` は併用できません。** indexを評価する `--staged` と、対象コミットを指定する `--head` は排他です。
 
-**「Refusing symlink output directory」が出る。** 出力先ディレクトリ自体がシンボリックリンクだと拒否します（ツールが作成しowner-onlyで書き込むため）。v0.2.1以降、macOSの `/var` のような**祖先の**シンボリックリンクは許可されます。
+**「Refusing symlink output directory」が出る。** 出力先ディレクトリ自体がシンボリックリンクだと拒否します（ツールが作成しowner-onlyで書き込むため）。v0.3.0以降、macOSの `/var` のような**祖先の**シンボリックリンクは許可されます。
 
 **低い指数は安全ということ？** いいえ。低指数や通常候補は安全性の表明ではなく、単なる確認順序です。
 
@@ -269,14 +271,14 @@ node dist/cli.js init --out ./review-radar.config.json
 
 ## 他のツールとの関係
 
-Review Radar はビルド・テスト・linterを実行せず、コメント投稿もしません。周辺ツールを置き換えるのではなく補完します:
+scanpath はビルド・テスト・linterを実行せず、コメント投稿もしません。周辺ツールを置き換えるのではなく補完します:
 
 | ツール | やること | 関係 |
 | --- | --- | --- |
-| [reviewdog](https://github.com/reviewdog/reviewdog) | linter/解析結果をPRコメントとして投稿 | Review Radarのレポートを流す連携は未実装 |
+| [reviewdog](https://github.com/reviewdog/reviewdog) | linter/解析結果をPRコメントとして投稿 | scanpathのレポートを流す連携は未実装 |
 | [Danger](https://danger.systems/) | PRメタデータへのルール実行 | レイヤーが異なる（PRイベント処理であり差分トリアージではない） |
 | [CodeQL](https://codeql.github.com/) / [Semgrep](https://semgrep.dev/) | 意味解析・パターンによる欠陥スキャン | 結果を仕様・文脈として `--context` に渡す併用が自然 |
-| [CodeRabbit](https://www.coderabbit.ai/) / PR-Agent / Copilot code review | LLMによるレビューコメント生成 | 同じ問題領域で姿勢が異なる: Review Radarは自動コメントを出さず「人間が読むべき箇所」の整理だけをする |
+| [CodeRabbit](https://www.coderabbit.ai/) / PR-Agent / Copilot code review | LLMによるレビューコメント生成 | 同じ問題領域で姿勢が異なる: scanpathは自動コメントを出さず「人間が読むべき箇所」の整理だけをする |
 
 ## ロードマップ／手伝ってほしいこと
 
@@ -295,7 +297,7 @@ npm test          # dist/ をビルド後、node --test tests/*.test.mjs を実�
 node dist/cli.js demo --out demo-output
 ```
 
-テストは89件（ユニット・Git統合・CLI・Jevモック・レポート/フィードバック経路）で、ubuntu / macOS × Node 22/24 のCIで実行されます。検証済みの範囲と未検証の範囲は [docs/VALIDATION.md](docs/VALIDATION.md) に記録しています（v0.2.1のmacOS実測を含む）。
+テストは89件（ユニット・Git統合・CLI・Jevモック・レポート/フィードバック経路）で、ubuntu / macOS × Node 22/24 のCIで実行されます。検証済みの範囲と未検証の範囲は [docs/VALIDATION.md](docs/VALIDATION.md) に記録しています（v0.3.0のmacOS実測を含む）。
 
 ## ライセンス
 

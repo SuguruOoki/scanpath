@@ -1,15 +1,15 @@
 ---
-name: review-radar
-description: Use the local Review Radar CLI to prioritize human code-review attention for a Git diff, show grounded evidence and missing context, and record explicit reviewer outcomes. Not an auto-approval tool.
+name: scanpath
+description: Use the local scanpath CLI to prioritize human code-review attention for a Git diff, show grounded evidence and missing context, and record explicit reviewer outcomes. Not an auto-approval tool.
 ---
 
-# Review Radar
+# scanpath
 
-Use this skill when the user asks to identify code changes that need human review, or explicitly asks to run Review Radar after implementing a change.
+Use this skill when the user asks to identify code changes that need human review, or explicitly asks to run scanpath after implementing a change.
 
 ## Locate and scope
 
-Find the existing CLI through `REVIEW_RADAR_HOME` or an explicit path supplied by the user. The entry point is `<tool-path>/dist/cli.js`. Do not fabricate an installed path or install dependencies automatically. Confirm Git and Node by running the CLI's `doctor` command. Select the current user-authorized Git repository, comparison refs, and a private local output path. Do not fetch, change branches, stage files, commit, or push merely to perform a review scan.
+Find the existing CLI through `SCANPATH_HOME` or an explicit path supplied by the user. The entry point is `<tool-path>/dist/cli.js`. Do not fabricate an installed path or install dependencies automatically. Confirm Git and Node by running the CLI's `doctor` command. Select the current user-authorized Git repository, comparison refs, and a private local output path. Do not fetch, change branches, stage files, commit, or push merely to perform a review scan.
 
 ## Default: no external transmission
 

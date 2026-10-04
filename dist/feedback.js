@@ -4,7 +4,7 @@ import { AXES, OUTCOMES } from './types.js';
 import { assert, bounded, object, readProvided, redact, secureDir } from './util.js';
 export function loadReport(path) {
     const raw = JSON.parse(readProvided(path, 32_000_000));
-    assert(object(raw) && raw.schemaVersion === 1 && typeof raw.id === 'string' && /^rr-[a-f0-9]{20}$/.test(raw.id) && Array.isArray(raw.candidates) && Array.isArray(raw.omissions) && Array.isArray(raw.warnings), 'Invalid Review Radar report');
+    assert(object(raw) && raw.schemaVersion === 1 && typeof raw.id === 'string' && /^sp-[a-f0-9]{20}$/.test(raw.id) && Array.isArray(raw.candidates) && Array.isArray(raw.omissions) && Array.isArray(raw.warnings), 'Invalid scanpath report');
     const ids = new Set();
     for (const c of raw.candidates) {
         assert(object(c) && typeof c.id === 'string' && /^u-[a-f0-9]{16}$/.test(c.id) && !ids.has(c.id), 'Invalid or duplicate candidate');

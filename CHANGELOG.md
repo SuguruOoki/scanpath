@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 (2026-10-04)
+
+- Renamed from Review Radar to **scanpath** — the reading path through a Git diff. The repository, CLI binary (`scanpath`), default output directory (`.scanpath/`), config template (`scanpath.config.json`), environment variable (`SCANPATH_JEV_ENDPOINT`), report branding, and the bundled agent skill (`skills/scanpath/`) all use the new name. Report ids now use the `sp-` prefix.
+
 ## 0.2.1 (2026-10-03)
 
 - Output-path security check now rejects only a symlinked output directory itself, not symlinked ancestors — the default temporary directory on macOS (`/var` → `/private/var`) no longer makes the tool refuse to write. All tests pass on macOS.

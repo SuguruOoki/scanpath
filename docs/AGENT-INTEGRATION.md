@@ -4,10 +4,10 @@ The CLI and a companion `SKILL.md` are bundled. They have not been installed in 
 
 ## 1. Keep the CLI in a stable location
 
-For example, extract it to `$HOME/tools/review-radar`. Add the following to a shell environment used to start the agent:
+For example, extract it to `$HOME/tools/scanpath`. Add the following to a shell environment used to start the agent:
 
 ```sh
-export REVIEW_RADAR_HOME="$HOME/tools/review-radar"
+export SCANPATH_HOME="$HOME/tools/scanpath"
 ```
 
 The skill does not contain a machine-specific absolute path and does not discover the API key itself. Agent subprocesses need access to the environment above. Otherwise, state the tool path explicitly in your request.
@@ -19,18 +19,18 @@ From the extracted tool directory, use the path for your agent:
 ```sh
 # Codex personal skills
 mkdir -p "$HOME/.agents/skills"
-cp -R skills/review-radar "$HOME/.agents/skills/"
+cp -R skills/scanpath "$HOME/.agents/skills/"
 
 # Claude Code personal skills
 mkdir -p "$HOME/.claude/skills"
-cp -R skills/review-radar "$HOME/.claude/skills/"
+cp -R skills/scanpath "$HOME/.claude/skills/"
 ```
 
 These are local instructions, not a plugin-marketplace package. Restart or reload the agent according to its current behavior. If a same-named skill already exists, back it up and inspect it before copying; do not unintentionally overwrite your customized instructions.
 
 ## 3. Example request
 
-> 実装を終えたらReview Radarで今回の差分をローカル分析してください。必須確認、判断材料不足、下位監査候補を整理し、各項目の根拠と人間が答えるべき質問を提示してください。外部APIへは送信しないでください。
+> 実装を終えたらscanpathで今回の差分をローカル分析してください。必須確認、判断材料不足、下位監査候補を整理し、各項目の根拠と人間が答えるべき質問を提示してください。外部APIへは送信しないでください。
 
 For Jev, explicitly authorize the target code disclosure separately. Neither having an API key nor installing the skill grants that authorization.
 

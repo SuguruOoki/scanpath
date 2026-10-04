@@ -37,14 +37,14 @@ test('hard budget counts failed attempts and stops retries',async()=>{
  await assert.rejects(client.evaluate(req()),BudgetExhausted);assert.equal(calls,1);
 });
 test('cache hit does not consume request budget; changed evidence invalidates',async t=>{
- const dir=mkdtempSync(join(tmpdir(),'rr-cache-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));
+ const dir=mkdtempSync(join(tmpdir(),'sp-cache-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));
  let calls=0;const c=config(),stats=usage(),body=req();
  const client=new JevClient({config:c,apiKey:'test',usage:stats,cacheDir:dir,fetcher:async()=>{calls++;return Response.json(validResponse(body.questions))}});
  await client.evaluate(body);const second=await client.evaluate(body);assert.equal(second.cached,true);assert.equal(calls,1);assert.equal(stats.cacheHits,1);
  await client.evaluate({...body,state:{change:'different'}});assert.equal(calls,2);
 });
 test('TTL expiry prevents stale cache reuse',async t=>{
- const dir=mkdtempSync(join(tmpdir(),'rr-cache-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));let now=1000,calls=0;const body=req();
+ const dir=mkdtempSync(join(tmpdir(),'sp-cache-'));t.after(()=>rmSync(dir,{recursive:true,force:true}));let now=1000,calls=0;const body=req();
  const client=new JevClient({config:config(),apiKey:'test',usage:usage(),cacheDir:dir,now:()=>now,fetcher:async()=>{calls++;return Response.json(validResponse(body.questions))}});
  await client.evaluate(body);now+=25*3600000;await client.evaluate(body);assert.equal(calls,2);
 });

@@ -20,7 +20,7 @@ The live client targets `POST https://api.typesafe.ai/v1/systemone` with Bearer 
 - GitHub checkout action: https://github.com/actions/checkout
 - GitHub setup-node action: https://github.com/actions/setup-node
 
-The supplied Review Radar skill is project-specific guidance. It does not replace or claim to install the official TypeSafe skill, and is not a registered ChatGPT Work plugin.
+The supplied scanpath skill is project-specific guidance. It does not replace or claim to install the official TypeSafe skill, and is not a registered ChatGPT Work plugin.
 
 ## Research boundary
 

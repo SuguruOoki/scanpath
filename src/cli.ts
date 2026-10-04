@@ -10,7 +10,7 @@ import { scan } from './scanner.js';
 import { OUTCOMES } from './types.js';
 import { assert, atomicWrite, hash, safeMessage } from './util.js';
 
-const HELP = `Review Radar 0.2.1 — 人間レビューの優先箇所を根拠付きで整理\n\nUsage:\n  node dist/cli.js scan --repo PATH [--base REF] [--head REF|worktree] [options]\n  node dist/cli.js demo [--out DIR]\n  node dist/cli.js doctor\n  node dist/cli.js init --out review-radar.config.json\n  node dist/cli.js feedback --report report.json --unit ID --outcome OUTCOME --minutes N [--note TEXT] [--out feedback.jsonl]\n  node dist/cli.js evaluate --report report.json --feedback feedback.jsonl [--top 5] [--out evaluation.json]\n  node dist/cli.js rerank --report report.json --config CONFIG --out DIR\n\nScan options:\n  --base REF                 基準コミット。既定 HEAD\n  --head REF|worktree        対象コミットまたは作業ツリー。既定 worktree\n  --merge-base               コミット比較を共通祖先から開始\n  --staged                   indexを評価。--headと併用不可\n  --include-untracked        未追跡ファイルも含める（worktreeのみ）\n  --provider heuristic|jev   既定 heuristic。ネットワーク不要\n  --allow-external-data      Jevへコード抜粋を送ることへの明示的許可\n  --context PATH.md          業務仕様・受け入れ条件\n  --ci PATH.json             {revision: full SHA, status: passed|failed|unknown}\n  --config PATH.json         重み、閾値、必須パス、上限設定\n  --max-requests N           HTTP試行の上限。再試行を含む\n  --no-cache                 キャッシュの読み書きをしない\n  --dry-run                  Jev入力の規模を算出。外部送信なし、キー不要\n  --out DIR                  出力先。既定 .review-radar\n  --fail-on-required         必須確認・未解析材料があれば終了コード3\n\nEnvironment:\n  REVIEW_RADAR_JEV_ENDPOINT  ループバックの Jev 互換サーバーで採点する（http://127.0.0.1 等のみ。キーと --allow-external-data は不要）\n\nFeedback outcomes:\n  ${OUTCOMES.join(' | ')}\n\nNo auto-approval, edits, test execution, pushes or telemetry.\n`;
+const HELP = `scanpath 0.3.0 — 人間レビューの優先箇所を根拠付きで整理\n\nUsage:\n  node dist/cli.js scan --repo PATH [--base REF] [--head REF|worktree] [options]\n  node dist/cli.js demo [--out DIR]\n  node dist/cli.js doctor\n  node dist/cli.js init --out scanpath.config.json\n  node dist/cli.js feedback --report report.json --unit ID --outcome OUTCOME --minutes N [--note TEXT] [--out feedback.jsonl]\n  node dist/cli.js evaluate --report report.json --feedback feedback.jsonl [--top 5] [--out evaluation.json]\n  node dist/cli.js rerank --report report.json --config CONFIG --out DIR\n\nScan options:\n  --base REF                 基準コミット。既定 HEAD\n  --head REF|worktree        対象コミットまたは作業ツリー。既定 worktree\n  --merge-base               コミット比較を共通祖先から開始\n  --staged                   indexを評価。--headと併用不可\n  --include-untracked        未追跡ファイルも含める（worktreeのみ）\n  --provider heuristic|jev   既定 heuristic。ネットワーク不要\n  --allow-external-data      Jevへコード抜粋を送ることへの明示的許可\n  --context PATH.md          業務仕様・受け入れ条件\n  --ci PATH.json             {revision: full SHA, status: passed|failed|unknown}\n  --config PATH.json         重み、閾値、必須パス、上限設定\n  --max-requests N           HTTP試行の上限。再試行を含む\n  --no-cache                 キャッシュの読み書きをしない\n  --dry-run                  Jev入力の規模を算出。外部送信なし、キー不要\n  --out DIR                  出力先。既定 .scanpath\n  --fail-on-required         必須確認・未解析材料があれば終了コード3\n\nEnvironment:\n  SCANPATH_JEV_ENDPOINT  ループバックの Jev 互換サーバーで採点する（http://127.0.0.1 等のみ。キーと --allow-external-data は不要）\n\nFeedback outcomes:\n  ${OUTCOMES.join(' | ')}\n\nNo auto-approval, edits, test execution, pushes or telemetry.\n`;
 const BOOLEAN = new Set(['staged','merge-base','include-untracked','allow-external-data','dry-run','no-cache','fail-on-required','help']);
 const COMMAND_FLAGS: Record<string, string[]> = {
   scan: ['repo','base','head','merge-base','staged','include-untracked','provider','allow-external-data','context','ci','config','max-requests','no-cache','dry-run','out','fail-on-required'],
@@ -34,13 +34,13 @@ async function main(): Promise<void> {
   if (command === 'help' || command === '--help' || f.help) { console.log(HELP); return; }
   const text = (key: string, fallback?: string): string | undefined => typeof f[key] === 'string' ? f[key] as string : fallback;
   const required = (key: string): string => { const v = text(key); assert(v, `--${key} is required`); return v; };
-  const out = resolve(text('out', '.review-radar')!);
+  const out = resolve(text('out', '.scanpath')!);
   if (command === 'doctor') {
     let gitVersion: string;
     try { gitVersion = execFileSync('git',['--version'],{encoding:'utf8'}).trim(); } catch { gitVersion = 'NOT FOUND'; }
-    console.log(JSON.stringify({ tool: 'review-radar 0.2.1', node: process.version, git: gitVersion, typesafeApiKey: process.env.TYPESAFE_API_KEY ? 'present (not verified)' : 'not configured', externalRequests: 0 },null,2)); return;
+    console.log(JSON.stringify({ tool: 'scanpath 0.3.0', node: process.version, git: gitVersion, typesafeApiKey: process.env.TYPESAFE_API_KEY ? 'present (not verified)' : 'not configured', externalRequests: 0 },null,2)); return;
   }
-  if (command === 'init') { atomicWrite(resolve(text('out', 'review-radar.config.json')!), JSON.stringify(DEFAULT_CONFIG,null,2)+'\n'); console.log('Configuration written.'); return; }
+  if (command === 'init') { atomicWrite(resolve(text('out', 'scanpath.config.json')!), JSON.stringify(DEFAULT_CONFIG,null,2)+'\n'); console.log('Configuration written.'); return; }
   if (command === 'scan' || command === 'demo') {
     const config = loadConfig(text('config'));
     if (text('max-requests')) config.jev.maxRequests = Number(text('max-requests'));
@@ -50,7 +50,7 @@ async function main(): Promise<void> {
       repo: text('repo','.')!, base: text('base'), head: text('head'), staged: f.staged === true, mergeBase: f['merge-base'] === true,
       includeUntracked: f['include-untracked'] === true, provider, allowExternalData: f['allow-external-data'] === true,
       context: text('context'), ci: text('ci'), config, out, dryRun: f['dry-run'] === true, noCache: f['no-cache'] === true,
-      progress: message => console.error('[review-radar] ' + message)
+      progress: message => console.error('[scanpath] ' + message)
     });
     writeReport(report,out);
     console.log(JSON.stringify({ reportId: report.id, candidates: report.candidates.length, required: report.candidates.filter(c=>c.required).length, complete: report.complete, requests: report.usage.requests, output: out },null,2));
@@ -60,7 +60,7 @@ async function main(): Promise<void> {
   }
   if (command === 'feedback') {
     const report = loadReport(required('report'));
-    const result = recordFeedback(report, resolve(text('out','.review-radar/feedback.jsonl')!), required('unit'), required('outcome'), Number(required('minutes')), text('note',''));
+    const result = recordFeedback(report, resolve(text('out','.scanpath/feedback.jsonl')!), required('unit'), required('outcome'), Number(required('minutes')), text('note',''));
     console.log(JSON.stringify(result,null,2)); return;
   }
   if (command === 'evaluate') {
@@ -73,11 +73,11 @@ async function main(): Promise<void> {
     assert(hash({ ...report.config, weights: config.weights }) === hash(config), 'rerankで変更できるのはweightsだけです。閾値・パス規則・取得条件・モデルの変更にはscanを再実行してください。');
     report.config = config; report.candidates = sortCandidates(report.candidates.map(c=>rankCandidate(c,config)));
     const previous = report.id;
-    report.id = 'rr-' + hash({ previous, config }).slice(0,20); report.createdAt = new Date().toISOString();
+    report.id = 'sp-' + hash({ previous, config }).slice(0,20); report.createdAt = new Date().toISOString();
     report.auditSample = report.candidates.slice(5).map(c=>({id:c.id,sort:hash('audit:'+c.id)})).sort((a,b)=>a.sort.localeCompare(b.sort)).slice(0,3).map(c=>c.id);
     report.warnings.push(`保存済みの評価軸から再順位付け。追加API呼び出しなし。元レポート: ${previous}`);
     writeReport(report,out); console.log(`Re-ranked report written: ${out}`); return;
   }
   throw new Error(`Unknown command: ${command}. Use --help.`);
 }
-main().catch(e => { console.error('review-radar: ' + safeMessage(e).replace(/[\u0000-\u001f\u007f]/g,' ')); process.exitCode = 1; });
+main().catch(e => { console.error('scanpath: ' + safeMessage(e).replace(/[\u0000-\u001f\u007f]/g,' ')); process.exitCode = 1; });

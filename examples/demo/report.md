@@ -1,10 +1,10 @@
-# Review Radar — 人間レビューの確認箇所
+# scanpath — 人間レビューの確認箇所
 
 > **デモ：人工的に作成した差分のローカル規則による分析です。実際のリポジトリ／Jevの精度測定ではありません。**
 
-対象: demo-commerce / commits  |  生成: 2026-10-02T15:47:52\.023Z
+対象: demo-commerce / commits  |  生成: 2026-10-04T11:50:54\.602Z
 
-base: `a8d79cdbe6669b23313e5a53a6a584cd4351faa2` → head: `e3179af44783248c2c8b48db7b1aa0d1333664f1`
+base: `ddd296db110ebf9a836cda7005dd287cdf3fde7a` → head: `e66ad5affb44e4804d52388f7922510a520c15bd`
 
 解析単位: **10** / 必須確認: **3** / 対象外: **0**
 
@@ -12,15 +12,15 @@ base: `a8d79cdbe6669b23313e5a53a6a584cd4351faa2` → head: `e3179af44783248c2c8b
 
 ## 最初に見る候補（最大5件）
 
-1. **人間の確認が必須** — migrations/20260919\_reset\.sql:1-2 \[head\] — 指数 80/100、評価済み重み 75% — `u-3215b39fd5e81ea9`
+1. **人間の確認が必須** — migrations/20260919\_reset\.sql:1-2 \[head\] — 指数 80/100、評価済み重み 75% — `u-99961323be5d4037`
 
-2. **人間の確認が必須** — src/auth/canView\.ts:2-2 \[head\] — 指数 78.3/100、評価済み重み 75% — `u-54e9315e475e5001`
+2. **人間の確認が必須** — src/auth/canView\.ts:2-2 \[head\] — 指数 78.3/100、評価済み重み 75% — `u-a10aee87c6e4d988`
 
-3. **人間の確認が必須** — src/billing/retryPayment\.ts:4-5 \[head\] — 指数 78.3/100、評価済み重み 75% — `u-00c9409218a32484`
+3. **人間の確認が必須** — src/billing/retryPayment\.ts:4-5 \[head\] — 指数 78.3/100、評価済み重み 75% — `u-b25df7d454c9777d`
 
-4. **人間レビューを優先** — src/pricing/serviceFee\.ts:1-4 \[head\] — 指数 58.3/100、評価済み重み 75% — `u-1f68dc62835491b1`
+4. **人間レビューを優先** — src/pricing/serviceFee\.ts:1-4 \[head\] — 指数 58.3/100、評価済み重み 75% — `u-53fc5793174b8107`
 
-5. **通常レビュー候補** — README\.md:3-3 \[head\] — 指数 26.7/100、評価済み重み 75% — `u-9b14a44c07edae68`
+5. **通常レビュー候補** — README\.md:3-3 \[head\] — 指数 26.7/100、評価済み重み 75% — `u-a2a1913e828be4fb`
 
 ## 未確認事項
 
@@ -38,7 +38,7 @@ APIから報告されたtoken: input 0 / output 0。タイムアウト等の課�
 
 ### migrations/20260919\_reset\.sql:1-2 \[head\]
 
-**人間の確認が必須** · 指数 **80/100** · 評価済み重み 75% · heuristic · `u-3215b39fd5e81ea9`
+**人間の確認が必須** · 指数 **80/100** · 評価済み重み 75% · heuristic · `u-99961323be5d4037`
 
 - DBマイグレーションの変更 — 設定したパス規則との一致。欠陥の検出ではありません。 [E0]
 
@@ -95,7 +95,7 @@ DROP TABLE payment_attempts;
 
 ### src/auth/canView\.ts:2-2 \[head\]
 
-**人間の確認が必須** · 指数 **78.3/100** · 評価済み重み 75% · heuristic · `u-54e9315e475e5001`
+**人間の確認が必須** · 指数 **78.3/100** · 評価済み重み 75% · heuristic · `u-a10aee87c6e4d988`
 
 - 認証・認可ディレクトリの変更 — 設定したパス規則との一致。欠陥の検出ではありません。 [E0]
 
@@ -164,7 +164,7 @@ export function canView(user: { tenantId: string }, document: { tenantId: string
 
 ### src/billing/retryPayment\.ts:4-5 \[head\]
 
-**人間の確認が必須** · 指数 **78.3/100** · 評価済み重み 75% · heuristic · `u-00c9409218a32484`
+**人間の確認が必須** · 指数 **78.3/100** · 評価済み重み 75% · heuristic · `u-b25df7d454c9777d`
 
 - 課金ディレクトリの変更 — 設定したパス規則との一致。欠陥の検出ではありません。 [E0]
 
@@ -244,7 +244,7 @@ export async function retryPayment(order: { id: string; amount: number }) {
 **R1** tests/retryPayment\.test\.ts head:1-8 (test)
 
 ```text
-// Illustrative test source; this file is not executed by Review Radar.
+// Illustrative test source; this file is not executed by scanpath.
 import { retryPayment } from '../src/billing/retryPayment';
 import { expect, test } from 'vitest';
 test('returns a result', async () => {
@@ -264,7 +264,7 @@ export const gateway = { charge: async (args: { amount: number; idempotencyKey?:
 
 ### src/pricing/serviceFee\.ts:1-4 \[head\]
 
-**人間レビューを優先** · 指数 **58.3/100** · 評価済み重み 75% · heuristic · `u-1f68dc62835491b1`
+**人間レビューを優先** · 指数 **58.3/100** · 評価済み重み 75% · heuristic · `u-53fc5793174b8107`
 
 - ガード節・契約の検証の削除 — 削除行に契約の検証（throw/assert/require等）がある。検証の移設・例外型の変更など意図的な契約変更でないか、呼び出し側とテストが同時に追従しているかを確認する。欠陥の検出ではありません。 [E0]
 
@@ -350,7 +350,7 @@ export function serviceFee(price: number, report: { user: { wallet: { balance: n
 
 ### README\.md:3-3 \[head\]
 
-**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-9b14a44c07edae68`
+**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-a2a1913e828be4fb`
 
 **人間が確認する問い**
 
@@ -415,7 +415,7 @@ Example application for a review-priority report.
 
 ### src/queue/retry\.ts:2-2 \[head\]
 
-**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-d8482dc6ee3fd9f5`
+**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-a34f577e022ccbf5`
 
 **人間が確認する問い**
 
@@ -480,7 +480,7 @@ export function retryLimit() {
 
 ### src/ui/button\.ts:1-1 \[head\]
 
-**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-8c5b8b878934a190`
+**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-415f367d127c5b63`
 
 **人間が確認する問い**
 
@@ -539,7 +539,7 @@ export const label = 'Continue';
 
 ### src/ui/footer\.ts:1-1 \[head\]
 
-**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-8e4c024aa076ed16`
+**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-f67d2313ecc8f93c`
 
 **人間が確認する問い**
 
@@ -598,7 +598,7 @@ export const footer = 'Thank you for visiting';
 
 ### src/ui/help\.ts:1-1 \[head\]
 
-**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-4bd27d394fe8950c`
+**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-a3d3b926b039f511`
 
 **人間が確認する問い**
 
@@ -657,7 +657,7 @@ export const help = 'Ask us a question';
 
 ### src/ui/title\.ts:1-1 \[head\]
 
-**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-571b3835448c9023`
+**通常レビュー候補** · 指数 **26.7/100** · 評価済み重み 75% · heuristic · `u-5ebbd97bd4cf8998`
 
 **人間が確認する問い**
 
@@ -716,7 +716,7 @@ export const title = 'Welcome back';
 
 ## 下位候補の抜き取り確認
 
-`u-8c5b8b878934a190`
+`u-a34f577e022ccbf5`
 
 ## 対象外・未解析パス
 
@@ -724,6 +724,6 @@ export const title = 'Welcome back';
 
 ## 識別子
 
-Report ID: `rr-66ffc12f42cb70381d5d` / schema 1 / tool 0.2.1
+Report ID: `sp-e542cbf61a95b262da52` / schema 1 / tool 0.3.0
 
 重み・閾値は未較正の初期値です。Jevの実用途精度は人間の評価結果で検証してください。

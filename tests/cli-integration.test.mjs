@@ -8,7 +8,7 @@ import { fixture, validResponse } from './helpers.mjs';
 import { scan } from '../dist/scanner.js';
 import { writeReport } from '../dist/report.js';
 const cli=resolve('dist/cli.js');
-function output(t) { const p=mkdtempSync(join(tmpdir(),'rr-output-'));t.after(()=>rmSync(p,{recursive:true,force:true}));return p; }
+function output(t) { const p=mkdtempSync(join(tmpdir(),'sp-output-'));t.after(()=>rmSync(p,{recursive:true,force:true}));return p; }
 function run(args) {const env={...process.env};delete env.TYPESAFE_API_KEY;return spawnSync(process.execPath,[cli,...args],{encoding:'utf8',env});}
 function json(path) {return JSON.parse(readFileSync(path,'utf8'));}
 
