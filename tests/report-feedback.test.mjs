@@ -19,7 +19,7 @@ test('deletion locations identify base, not incorrect head lines',async t=>{
 });
 test('all three report formats are written and JSON loads',async t=>{
  const f=fixture(t);f.put('src/util.ts','export const n=2;\n');const r=await scan(f.options());writeReport(r,join(f.root,'output'));
- assert.equal(loadReport(join(f.root,'output/report.json')).id,r.id);assert.match(readFileSync(join(f.root,'output/report.html'),'utf8'),/Review Radar/);assert.match(readFileSync(join(f.root,'output/report.md'),'utf8'),/全候補/);
+ assert.equal(loadReport(join(f.root,'output/report.json')).id,r.id);assert.match(readFileSync(join(f.root,'output/report.html'),'utf8'),/scanpath/);assert.match(readFileSync(join(f.root,'output/report.md'),'utf8'),/全候補/);
 });
 test('feedback uses report and unit IDs; unknown unit rejected',async t=>{
  const f=fixture(t);f.put('src/util.ts','export const n=2;\n');const r=await scan(f.options()),file=join(f.root,'fb.jsonl');

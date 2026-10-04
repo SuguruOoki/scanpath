@@ -1,9 +1,9 @@
 
-> review-radar@0.1.0 test
+> scanpath@0.1.0 test
 > npm run build && node --test tests/*.test.mjs
 
 
-> review-radar@0.1.0 build
+> scanpath@0.1.0 build
 > tsc -p tsconfig.json
 
 TAP version 13

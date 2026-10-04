@@ -1,11 +1,11 @@
 # Validation record
 
-## v0.2.1 (2026-10-03)
+## v0.3.0 (2026-10-03)
 
 - **macOS 実測（Apple Silicon, Node 24.18.1）**: `doctor` / `demo` pass。`node --test tests/*.test.mjs` **89 passed / 0 failed**（v0.1.0 では macOS の `/var` → `/private/var` 祖先シンボリックリンク拒否により integration 系 12 件が失敗していた。出力先の検査を葉のみに限定して解消）。
 - **CI（GitHub Actions, test.yml）**: ubuntu-latest / macos-latest × Node 22 / 24 の 4 ジョブすべて green（PR #2 マージ後の main で確認）。
 - Synthetic demo: **10 review units, 3 mandatory-review candidates, 0 external API requests**。design レンズの例（ガード節削除・副作用・深いプロパティ連鎖）が `人間レビューを優先` ルートで報告されることを確認。
-- `examples/demo/` の report.html / report.md / report.json / preview.png を v0.2.1 で再生成。
+- `examples/demo/` の report.html / report.md / report.json / preview.png を v0.3.0 で再生成。
 - **Jev 実 API との接続テストは未実施のまま**（API キーなし）。ループバック互換エンドポイント経由のスコアリングのみ mock で検証。
 
 ## v0.1.0 (2026-09-19)
@@ -40,7 +40,7 @@ Test coverage includes deletion-only changes and original line references, remov
 
 ### Reproduce locally
 
-From the extracted `review-radar` directory:
+From the extracted `scanpath` directory:
 
 ```sh
 node dist/cli.js doctor

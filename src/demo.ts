@@ -6,11 +6,11 @@ import type { Config, Report } from './types.js';
 import { scan } from './scanner.js';
 
 export async function demo(out: string, config: Config): Promise<Report> {
-  const root = mkdtempSync(join(tmpdir(), 'review-radar-demo-'));
+  const root = mkdtempSync(join(tmpdir(), 'scanpath-demo-'));
   const put = (path: string, text: string): void => { mkdirSync(dirname(join(root,path)),{recursive:true}); writeFileSync(join(root,path),text); };
   const run = (...args: string[]): string => execFileSync('git', ['-C',root,...args], { encoding:'utf8', stdio:['ignore','pipe','pipe'] });
   try {
-    run('init','-b','main'); run('config','user.name','Review Radar Demo'); run('config','user.email','demo@example.invalid');
+    run('init','-b','main'); run('config','user.name','scanpath Demo'); run('config','user.email','demo@example.invalid');
     put('src/billing/retryPayment.ts', `import { gateway } from '../gateway';\n\nexport async function retryPayment(order: { id: string; amount: number }) {\n  return gateway.charge({ amount: order.amount, idempotencyKey: order.id });\n}\n`);
     put('src/gateway.ts', `// Demo adapter only. No real payment processing.\nexport const gateway = { charge: async (args: { amount: number; idempotencyKey?: string }) => ({ id: 'demo', ...args }) };\n`);
     put('src/auth/canView.ts', `export function canView(user: { tenantId: string }, document: { tenantId: string }) {\n  return user.tenantId === document.tenantId;\n}\n`);
@@ -21,7 +21,7 @@ export async function demo(out: string, config: Config): Promise<Report> {
     put('src/ui/button.ts', `export const label = 'Submit';\n`);
     put('src/ui/help.ts', `export const help = 'Contact support';\n`);
     put('README.md', '# Demo\n\nExample application.\n');
-    put('tests/retryPayment.test.ts', `// Illustrative test source; this file is not executed by Review Radar.\nimport { retryPayment } from '../src/billing/retryPayment';\nimport { expect, test } from 'vitest';\ntest('returns a result', async () => {\n  const result = await retryPayment({ id: 'order-1', amount: 100 });\n  expect(result.id).toBe('demo');\n});\n`);
+    put('tests/retryPayment.test.ts', `// Illustrative test source; this file is not executed by scanpath.\nimport { retryPayment } from '../src/billing/retryPayment';\nimport { expect, test } from 'vitest';\ntest('returns a result', async () => {\n  const result = await retryPayment({ id: 'order-1', amount: 100 });\n  expect(result.id).toBe('demo');\n});\n`);
     run('add','.'); run('commit','-m','demo baseline');
     put('src/billing/retryPayment.ts', `import { gateway } from '../gateway';\n\nexport async function retryPayment(order: { id: string; amount: number }) {\n  // Retry after a timeout. Does the original request already have a result?\n  return gateway.charge({ amount: order.amount });\n}\n`);
     put('src/auth/canView.ts', `export function canView(user: { tenantId: string }, document: { tenantId: string }) {\n  return Boolean(user);\n}\n`);

@@ -10,7 +10,7 @@
 
 ## 環境 / Environment
 
-- Review Radar version: 
+- scanpath version: 
 - Node.js / Git version:
 - OS:
 

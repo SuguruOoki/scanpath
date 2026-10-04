@@ -1,8 +1,10 @@
-# Review Radar
+# scanpath
 
-Human code-review triage for a Git diff — which hunks a person should read first, with the evidence and the open questions attached.
+The reading path through a Git diff — which hunks a person should read first, with the evidence and the open questions attached.
 
-[![CI](https://github.com/SuguruOoki/review-radar/actions/workflows/test.yml/badge.svg)](https://github.com/SuguruOoki/review-radar/actions/workflows/test.yml)
+*Formerly named Review Radar; renamed in v0.3.0.*
+
+[![CI](https://github.com/SuguruOoki/scanpath/actions/workflows/test.yml/badge.svg)](https://github.com/SuguruOoki/scanpath/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node >= 22](https://img.shields.io/badge/Node-%3E%3D22-green.svg)](package.json)
 
@@ -11,14 +13,14 @@ Human code-review triage for a Git diff — which hunks a person should read fir
 **Japanese guide: [README.ja.md](README.ja.md)**
 
 ```console
-$ git clone https://github.com/SuguruOoki/review-radar.git
-$ cd review-radar && node dist/cli.js doctor     # Node.js 22+ and Git. No npm install, no network.
+$ git clone https://github.com/SuguruOoki/scanpath.git
+$ cd scanpath && node dist/cli.js doctor     # Node.js 22+ and Git. No npm install, no network.
 $ node dist/cli.js demo --out demo-output && open demo-output/report.html
 ```
 
 ## Table of contents
 
-- [What is Review Radar?](#what-is-review-radar)
+- [What is scanpath?](#what-is-scanpath)
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -31,9 +33,9 @@ $ node dist/cli.js demo --out demo-output && open demo-output/report.html
 - [Development](#development)
 - [License](#license)
 
-## What is Review Radar?
+## What is scanpath?
 
-Review Radar splits a Git diff into review units (Git hunks) and routes each unit to one of four buckets:
+scanpath splits a Git diff into review units (Git hunks) and routes each unit to one of four buckets:
 
 | Route id | English | Report label (Japanese) |
 | --- | --- | --- |
@@ -46,9 +48,9 @@ A unit that matches a mandatory rule (authorization, payment, destructive data, 
 
 Every candidate carries its evidence — the diff, the file before and after, and related test or dependency sources — plus the questions a reviewer should answer. Why a unit was surfaced is always printed as matched signals, each with a note that says what the match does and does not mean. A low index, a green CI badge and exit code 0 are never approval.
 
-Review Radar does **not**: approve or merge, edit code, push, execute the changed code, run tests or measure coverage, post to GitHub or any other service, or send telemetry. The default provider is local rules and makes no network requests at all. Semantic scoring through Jev / TypeSafe is opt-in and requires both an API key and an explicit `--allow-external-data` flag.
+scanpath does **not**: approve or merge, edit code, push, execute the changed code, run tests or measure coverage, post to GitHub or any other service, or send telemetry. The default provider is local rules and makes no network requests at all. Semantic scoring through Jev / TypeSafe is opt-in and requires both an API key and an explicit `--allow-external-data` flag.
 
-Current release: **v0.2.1**. Priority indexes are review priorities, not defect probabilities, and the weights and thresholds are uncalibrated. Read [Limitations](#limitations) before relying on the output.
+Current release: **v0.3.0**. Priority indexes are review priorities, not defect probabilities, and the weights and thresholds are uncalibrated. Read [Limitations](#limitations) before relying on the output.
 
 ## Features
 
@@ -92,11 +94,11 @@ None of these signals is mandatory, and none of them is a defect detection. A de
 
 ## Installation
 
-Review Radar needs **Node.js 22 or newer** and **Git**. The repository ships the built `dist/`, so using the tool does not require `npm install`, and there are no runtime dependencies.
+scanpath needs **Node.js 22 or newer** and **Git**. The repository ships the built `dist/`, so using the tool does not require `npm install`, and there are no runtime dependencies.
 
 ```bash
-git clone https://github.com/SuguruOoki/review-radar.git
-cd review-radar
+git clone https://github.com/SuguruOoki/scanpath.git
+cd scanpath
 node dist/cli.js doctor
 ```
 
@@ -106,7 +108,7 @@ node dist/cli.js doctor
 ```console
 $ node dist/cli.js doctor
 {
-  "tool": "review-radar 0.2.1",
+  "tool": "scanpath 0.3.0",
   "node": "v24.18.1",
   "git": "git version 2.50.1 (Apple Git-155)",
   "typesafeApiKey": "not configured",
@@ -176,7 +178,7 @@ Jev mode sends code excerpts to the TypeSafe API and must be turned on deliberat
      --provider jev --allow-external-data --max-requests 10 --out ./review-output
    ```
 
-The presence of a key is not consent; both are required. `.env` files are not read automatically. The API contract checked against the official documentation is at https://docs.typesafe.ai/api. A loopback Jev-compatible endpoint can be used for local models via `REVIEW_RADAR_JEV_ENDPOINT` (loopback `http://127.0.0.1`-style URLs only, no key needed). Live Jev connectivity has not been tested with a real key — see [Limitations](#limitations).
+The presence of a key is not consent; both are required. `.env` files are not read automatically. The API contract checked against the official documentation is at https://docs.typesafe.ai/api. A loopback Jev-compatible endpoint can be used for local models via `SCANPATH_JEV_ENDPOINT` (loopback `http://127.0.0.1`-style URLs only, no key needed). Live Jev connectivity has not been tested with a real key — see [Limitations](#limitations).
 
 ### Add a spec and CI results
 
@@ -196,7 +198,7 @@ node dist/cli.js evaluate --report review-output/report.json --feedback feedback
 node dist/cli.js rerank --report review-output/report.json --config tuned-config.json --out reranked
 ```
 
-Outcomes are `critical_fix`, `bug_fix`, `spec_decision`, `design_decision`, `cosmetic`, `no_action` or `insufficient_context`. Without `--out`, feedback goes to `.review-radar/feedback.jsonl`. `rerank` reuses stored model judgments — a rule, threshold, scope or model change needs a fresh scan.
+Outcomes are `critical_fix`, `bug_fix`, `spec_decision`, `design_decision`, `cosmetic`, `no_action` or `insufficient_context`. Without `--out`, feedback goes to `.scanpath/feedback.jsonl`. `rerank` reuses stored model judgments — a rule, threshold, scope or model change needs a fresh scan.
 
 ### Command reference
 
@@ -205,7 +207,7 @@ Outcomes are `critical_fix`, `bug_fix`, `spec_decision`, `design_decision`, `cos
 | `scan` | Analyze a diff (commits, worktree or staged) and write `report.html` / `report.md` / `report.json` |
 | `demo` | Analyze a synthetic repository with no network access |
 | `doctor` | Print tool, Node and Git versions |
-| `init` | Write a default `review-radar.config.json` |
+| `init` | Write a default `scanpath.config.json` |
 | `feedback` | Record a reviewer's outcome for a unit |
 | `evaluate` | Summarize labeled coverage, precision and audit status |
 | `rerank` | Reorder a saved report with new weights only |
@@ -238,10 +240,10 @@ The five axes and their default weights: failure impact 0.30, verification gap 0
 ## Configuration
 
 ```bash
-node dist/cli.js init --out ./review-radar.config.json
+node dist/cli.js init --out ./scanpath.config.json
 ```
 
-The configuration sets axis weights, route thresholds, size limits, Jev request settings, exclude globs and additional mandatory path rules. See [examples/review-radar.config.json](examples/review-radar.config.json) for the annotated defaults.
+The configuration sets axis weights, route thresholds, size limits, Jev request settings, exclude globs and additional mandatory path rules. See [examples/scanpath.config.json](examples/scanpath.config.json) for the annotated defaults.
 
 ## Limitations
 
@@ -258,7 +260,7 @@ The configuration sets axis weights, route thresholds, size limits, Jev request 
 
 **`--staged` and `--head` together fail.** They are mutually exclusive; `--staged` analyzes the index.
 
-**"Refusing symlink output directory".** The output directory itself must not be a symlink (the tool creates it and writes owner-only). Since v0.2.1, symlinked *ancestors* such as macOS `/var` are accepted.
+**"Refusing symlink output directory".** The output directory itself must not be a symlink (the tool creates it and writes owner-only). Since v0.3.0, symlinked *ancestors* such as macOS `/var` are accepted.
 
 **Is a low score safe?** No. A low index or a `regular_review` route is not a safety statement; it is only a queue position.
 
@@ -270,14 +272,14 @@ The configuration sets axis weights, route thresholds, size limits, Jev request 
 
 ## Comparison with other tools
 
-Review Radar does not run your build, tests or linters, and it does not post comments. It complements rather than replaces the surrounding tooling:
+scanpath does not run your build, tests or linters, and it does not post comments. It complements rather than replaces the surrounding tooling:
 
 | Tool | What it does | Relationship |
 | --- | --- | --- |
-| [reviewdog](https://github.com/reviewdog/reviewdog) | Posts linter/analyzer findings as PR comments | Could post Review Radar's report; not implemented |
+| [reviewdog](https://github.com/reviewdog/reviewdog) | Posts linter/analyzer findings as PR comments | Could post scanpath's report; not implemented |
 | [Danger](https://danger.systems/) | Rules over PR metadata and CI | Different layer (PR events, not diff triage) |
-| [CodeQL](https://codeql.github.com/) / [Semgrep](https://semgrep.dev/) | Semantic / pattern-based defect scanning | Review Radar links their findings in as spec/context instead |
-| [CodeRabbit](https://www.coderabbit.ai/) / PR-Agent / Copilot code review | LLM-generated review comments | Same problem space, different posture: Review Radar only triages what a human should read, with no auto-comments |
+| [CodeQL](https://codeql.github.com/) / [Semgrep](https://semgrep.dev/) | Semantic / pattern-based defect scanning | scanpath links their findings in as spec/context instead |
+| [CodeRabbit](https://www.coderabbit.ai/) / PR-Agent / Copilot code review | LLM-generated review comments | Same problem space, different posture: scanpath only triages what a human should read, with no auto-comments |
 
 ## Roadmap / Help wanted
 

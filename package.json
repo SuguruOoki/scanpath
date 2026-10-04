@@ -1,11 +1,11 @@
 {
-  "name": "review-radar",
-  "version": "0.2.1",
+  "name": "scanpath",
+  "version": "0.3.0",
   "private": true,
-  "description": "Evidence-grounded human code-review triage with Jev / TypeSafe",
+  "description": "The reading path through a Git diff: which hunks a person should read first, with evidence",
   "type": "module",
   "engines": { "node": ">=22" },
-  "bin": { "review-radar": "dist/cli.js" },
+  "bin": { "scanpath": "dist/cli.js" },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && node --test tests/*.test.mjs",

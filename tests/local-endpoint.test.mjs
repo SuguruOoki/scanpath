@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path';
 import { fixture, validResponse } from './helpers.mjs';
 import { resolveEndpoint } from '../dist/jev.js';
 const cli=resolve('dist/cli.js');
-function output(t) { const p=mkdtempSync(join(tmpdir(),'rr-output-'));t.after(()=>rmSync(p,{recursive:true,force:true}));return p; }
+function output(t) { const p=mkdtempSync(join(tmpdir(),'sp-output-'));t.after(()=>rmSync(p,{recursive:true,force:true}));return p; }
 function run(args,extraEnv) {
  const env={...process.env,...extraEnv};delete env.TYPESAFE_API_KEY;
  return new Promise(done=>{const p=spawn(process.execPath,[cli,...args],{env});let stderr='';p.stderr.on('data',d=>stderr+=d);p.on('close',status=>done({status,stderr}));});
@@ -33,7 +33,7 @@ test('endpoint override accepts only loopback http URLs',()=>{
 });
 test('CLI scores through a loopback server without a key or disclosure flag, and never forwards a real key',async t=>{
  const f=fixture(t);f.put('src/util.ts','export const n=2;\n');const out=output(t),jev=await mockJev(t);
- const p=await run(['scan','--repo',f.root,'--provider','jev','--no-cache','--out',out],{REVIEW_RADAR_JEV_ENDPOINT:jev.url});
+ const p=await run(['scan','--repo',f.root,'--provider','jev','--no-cache','--out',out],{SCANPATH_JEV_ENDPOINT:jev.url});
  assert.equal(p.status,0,p.stderr);
  const r=JSON.parse(readFileSync(join(out,'report.json'),'utf8'));
  assert.equal(r.usage.requests,1);assert.equal(jev.seen.length,1);assert.equal(jev.seen[0].authorization,'Bearer local');
@@ -42,11 +42,11 @@ test('CLI scores through a loopback server without a key or disclosure flag, and
 });
 test('CLI refuses a non-loopback endpoint override before scanning',async t=>{
  const f=fixture(t);f.put('src/util.ts','export const n=2;\n');
- const p=await run(['scan','--repo',f.root,'--provider','jev','--out',output(t)],{REVIEW_RADAR_JEV_ENDPOINT:'https://evil.example/v1/systemone'});
+ const p=await run(['scan','--repo',f.root,'--provider','jev','--out',output(t)],{SCANPATH_JEV_ENDPOINT:'https://evil.example/v1/systemone'});
  assert.notEqual(p.status,0);assert.match(p.stderr,/ループバック/);
 });
 test('remote Jev still requires the disclosure flag when no override is set',async t=>{
  const f=fixture(t);f.put('src/util.ts','export const n=2;\n');
- const p=await run(['scan','--repo',f.root,'--provider','jev','--out',output(t)],{REVIEW_RADAR_JEV_ENDPOINT:''});
+ const p=await run(['scan','--repo',f.root,'--provider','jev','--out',output(t)],{SCANPATH_JEV_ENDPOINT:''});
  assert.equal(p.status,1);assert.match(p.stderr,/allow-external-data/);
 });

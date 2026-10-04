@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "toolVersion": "0.2.1",
-  "id": "rr-66ffc12f42cb70381d5d",
-  "createdAt": "2026-10-02T15:47:52.023Z",
+  "toolVersion": "0.3.0",
+  "id": "sp-e542cbf61a95b262da52",
+  "createdAt": "2026-10-04T11:50:54.602Z",
   "demo": true,
   "repository": {
     "name": "demo-commerce",
-    "base": "a8d79cdbe6669b23313e5a53a6a584cd4351faa2",
-    "head": "e3179af44783248c2c8b48db7b1aa0d1333664f1",
+    "base": "ddd296db110ebf9a836cda7005dd287cdf3fde7a",
+    "head": "e66ad5affb44e4804d52388f7922510a520c15bd",
     "mode": "commits",
     "diffFingerprint": "ec3ab073f902672e9d3b3ec3b12915f656bf9e4e721853db1f93d1607095e2d1"
   },
@@ -100,7 +100,7 @@
   },
   "candidates": [
     {
-      "id": "u-3215b39fd5e81ea9",
+      "id": "u-99961323be5d4037",
       "path": "migrations/20260919_reset.sql",
       "status": "A",
       "oldMode": "000000",
@@ -200,7 +200,7 @@
       "historyCommits": 0
     },
     {
-      "id": "u-54e9315e475e5001",
+      "id": "u-a10aee87c6e4d988",
       "path": "src/auth/canView.ts",
       "status": "M",
       "oldMode": "100644",
@@ -310,7 +310,7 @@
       "historyCommits": 1
     },
     {
-      "id": "u-00c9409218a32484",
+      "id": "u-b25df7d454c9777d",
       "path": "src/billing/retryPayment.ts",
       "status": "M",
       "oldMode": "100644",
@@ -395,7 +395,7 @@
           "side": "head",
           "start": 1,
           "end": 8,
-          "text": "// Illustrative test source; this file is not executed by Review Radar.\nimport { retryPayment } from '../src/billing/retryPayment';\nimport { expect, test } from 'vitest';\ntest('returns a result', async () => {\n  const result = await retryPayment({ id: 'order-1', amount: 100 });\n  expect(result.id).toBe('demo');\n});\n",
+          "text": "// Illustrative test source; this file is not executed by scanpath.\nimport { retryPayment } from '../src/billing/retryPayment';\nimport { expect, test } from 'vitest';\ntest('returns a result', async () => {\n  const result = await retryPayment({ id: 'order-1', amount: 100 });\n  expect(result.id).toBe('demo');\n});\n",
           "truncated": false
         },
         {
@@ -455,7 +455,7 @@
       "historyCommits": 1
     },
     {
-      "id": "u-1f68dc62835491b1",
+      "id": "u-53fc5793174b8107",
       "path": "src/pricing/serviceFee.ts",
       "status": "M",
       "oldMode": "100644",
@@ -574,7 +574,7 @@
       "historyCommits": 1
     },
     {
-      "id": "u-9b14a44c07edae68",
+      "id": "u-a2a1913e828be4fb",
       "path": "README.md",
       "status": "M",
       "oldMode": "100644",
@@ -666,7 +666,7 @@
       "historyCommits": 1
     },
     {
-      "id": "u-d8482dc6ee3fd9f5",
+      "id": "u-a34f577e022ccbf5",
       "path": "src/queue/retry.ts",
       "status": "M",
       "oldMode": "100644",
@@ -758,7 +758,7 @@
       "historyCommits": 1
     },
     {
-      "id": "u-8c5b8b878934a190",
+      "id": "u-415f367d127c5b63",
       "path": "src/ui/button.ts",
       "status": "M",
       "oldMode": "100644",
@@ -850,7 +850,7 @@
       "historyCommits": 1
     },
     {
-      "id": "u-8e4c024aa076ed16",
+      "id": "u-f67d2313ecc8f93c",
       "path": "src/ui/footer.ts",
       "status": "M",
       "oldMode": "100644",
@@ -942,7 +942,7 @@
       "historyCommits": 1
     },
     {
-      "id": "u-4bd27d394fe8950c",
+      "id": "u-a3d3b926b039f511",
       "path": "src/ui/help.ts",
       "status": "M",
       "oldMode": "100644",
@@ -1034,7 +1034,7 @@
       "historyCommits": 1
     },
     {
-      "id": "u-571b3835448c9023",
+      "id": "u-5ebbd97bd4cf8998",
       "path": "src/ui/title.ts",
       "status": "M",
       "oldMode": "100644",
@@ -1132,7 +1132,7 @@
     "ローカル規則モード。Jevの意味評価は未実行で、検証不足の軸は未評価です。"
   ],
   "auditSample": [
-    "u-8c5b8b878934a190"
+    "u-a34f577e022ccbf5"
   ],
   "usage": {
     "requests": 0,

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for considering a contribution. Review Radar is deliberately small: lexical checks and honest reporting, no auto-approval, no network by default.
+Thanks for considering a contribution. scanpath is deliberately small: lexical checks and honest reporting, no auto-approval, no network by default.
 
 ## Before you start
 

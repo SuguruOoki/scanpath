@@ -154,7 +154,7 @@ export interface Usage {
 }
 export interface Report {
     schemaVersion: 1;
-    toolVersion: '0.2.1';
+    toolVersion: '0.3.0';
     id: string;
     createdAt: string;
     demo: boolean;
